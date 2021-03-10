@@ -2,49 +2,68 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import './button.css';
 
-/**
- * Primary UI component for user interaction
- */
-export const Button = ({ primary, backgroundColor, size, label, ...props }) => {
-  const mode = primary ? 'storybook-button--primary' : 'storybook-button--secondary';
+function calculateFibonacciArray(n) {
+  const result = [0, 1];
+  for (let i = 2; i < n; i++) {
+    result.push(result[i-2] + result[i-1]);
+  }
+  return result; // or result[n-1] if you want to get the nth term
+}
+function getRandomInt(n) {
+  let x = 0;
+  for (let i = 0; i < n; i++) {
+    const min = 0;
+    const max = Number.MAX_SAFE_INTEGER
+    x = Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+  return x;
+}
+
+export const Button = (props) => {
+
+  const { label, runPerformanceTest, runPerformanceAsync, runPerformanceEffect, ...otherProps } = props;
+
+  const buttonClass = [
+    'storybook-button',
+    `storybook-button--large`,
+    'storybook-button--primary'
+  ].join(' ');
+
+  const iterations = runPerformanceTest ? 10000000 : 0;
+
+  // Test performance in effect hook
+  React.useEffect(() => {
+    if (runPerformanceEffect) {
+      console.log("RUN EFFECT PERFORMANCE TEST");
+      calculateFibonacciArray(iterations)
+    }
+  })
+
+  if (runPerformanceAsync) {
+    console.log("RUN ASYNC PERFORMANCE TEST");
+    (async () => calculateFibonacciArray(iterations))();
+  }
+  else if (!runPerformanceEffect && !runPerformanceAsync) {
+    console.log("RUN NORMAL PERFORMANCE TEST");
+    calculateFibonacciArray(iterations)
+  }
+
   return (
     <button
       type="button"
-      className={['storybook-button', `storybook-button--${size}`, mode].join(' ')}
-      style={backgroundColor && { backgroundColor }}
-      {...props}
-    >
+      className={buttonClass}
+      {...otherProps}>
       {label}
     </button>
   );
+
 };
 
 Button.propTypes = {
-  /**
-   * Is this the principal call to action on the page?
-   */
-  primary: PropTypes.bool,
-  /**
-   * What background color to use
-   */
-  backgroundColor: PropTypes.string,
-  /**
-   * How large should the button be?
-   */
-  size: PropTypes.oneOf(['small', 'medium', 'large']),
-  /**
-   * Button contents
-   */
   label: PropTypes.string.isRequired,
-  /**
-   * Optional click handler
-   */
-  onClick: PropTypes.func,
+  runPerformanceTest: PropTypes.bool.isRequired,
+  runPerformanceAsync: PropTypes.bool.isRequired,
+  runPerformanceEffect: PropTypes.bool.isRequired,
 };
 
-Button.defaultProps = {
-  backgroundColor: null,
-  primary: false,
-  size: 'medium',
-  onClick: undefined,
-};
+Button.defaultProps = {};

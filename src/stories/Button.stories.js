@@ -1,36 +1,43 @@
 import React from 'react';
-
 import { Button } from './Button';
 
 export default {
   title: 'Example/Button',
   component: Button,
-  argTypes: {
-    backgroundColor: { control: 'color' },
-  },
+  argTypes: {},
 };
 
 const Template = (args) => <Button {...args} />;
 
-export const Primary = Template.bind({});
-Primary.args = {
-  primary: true,
+export const ButtonQuick = Template.bind({});
+ButtonQuick.args = {
   label: 'Button',
+  runPerformanceTest: false,
+  runPerformanceAsync: false,
+  runPerformanceEffect: false,
 };
 
-export const Secondary = Template.bind({});
-Secondary.args = {
+export const ButtonSlow = Template.bind({});
+ButtonSlow.args = {
   label: 'Button',
+  runPerformanceTest: true,
+  runPerformanceAsync: false,
+  runPerformanceEffect: false,
 };
 
-export const Large = Template.bind({});
-Large.args = {
-  size: 'large',
+
+export const ButtonSlowAsync = Template.bind({});
+ButtonSlowAsync.args = {
   label: 'Button',
+  runPerformanceTest: true,
+  runPerformanceAsync: true,
+  runPerformanceEffect: false,
 };
 
-export const Small = Template.bind({});
-Small.args = {
-  size: 'small',
+export const ButtonSlowEffect = Template.bind({});
+ButtonSlowEffect.args = {
   label: 'Button',
+  runPerformanceTest: true,
+  runPerformanceAsync: false,
+  runPerformanceEffect: true,
 };
